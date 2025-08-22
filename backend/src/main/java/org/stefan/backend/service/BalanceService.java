@@ -21,7 +21,9 @@ public class BalanceService {
   public String updateBalance(Long id , BigDecimal balance) {
      int rowEffected =  balanceRepository.updateBalance(id , balance);
 
-     if(rowEffected == 0) {
+     int rowsAffected =  balanceRepository.updateBalance(id , balance);
+
+     if(rowsAffected == 0) {
          return "No rows affected updating balance with id: " + id;
      }
      return "Balance successfully updated!";
