@@ -22,7 +22,7 @@ public class BalanceRepository {
     }
 
     public int updateBalance(Long id , BigDecimal balance) {
-        String sql = "UPDATE balance SET total_balance = total_balance + ? WHERE id = ?";
+        String sql = "UPDATE BALANCE SET total_balance = total_balance + ? WHERE id = ?";
         return jdbcTemplate.update(sql, balance, id);
     }
 }

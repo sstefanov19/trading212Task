@@ -1,14 +1,10 @@
 package org.stefan.backend.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.stefan.backend.dto.BalanceRequest;
-import org.stefan.backend.model.Balance;
 import org.stefan.backend.service.BalanceService;
-
-import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/v1")
