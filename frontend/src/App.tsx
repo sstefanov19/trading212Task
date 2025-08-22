@@ -1,25 +1,17 @@
-import { useEffect } from "react"
+import { useState } from "react";
+
 
 function App() {
+    const [price , setPrice] = useState("");
+   const socket = new WebSocket("ws://localhost:8080/ws/bitcoin");
 
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch("http://localhost:8080/api/v1/test");
-
-            if(!response.ok) throw new Error("Error while fetching");
-
-            const data = await response.text();
-
-            console.log(data);
-        }
-
-        fetchData();
-    } , []);
+   socket.onmessage = (event) => {
+        setPrice(event.data);
+   }
 
   return (
     <>
-        <h1>hello world</h1>
+        <h1>{price}</h1>
     </>
   )
 }
