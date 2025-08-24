@@ -114,6 +114,17 @@ public class TradeService {
         trade.setProfit(profit);
 
         System.out.println("Order sent");
-        tradeRepository.save(trade);
+        TradeDto tradeDto = mapToDto(trade);
+        tradeRepository.save(tradeDto);
+    }
+
+    private TradeDto mapToDto(Trade trade) {
+        TradeDto dto = new TradeDto();
+        dto.setDate(trade.getDate());
+        dto.setAction(trade.getAction());
+        dto.setQuantity(trade.getQuantity());
+        dto.setPrice(trade.getPrice());
+        dto.setProfit(trade.getProfit());
+        return dto;
     }
 }
