@@ -23,10 +23,4 @@ public class TradeController {
 
     }
 
-    @PostMapping("/start")
-    public ResponseEntity<String> startAutoTrading() {
-        tradeService.autoTrade();
-        return ResponseEntity.ok("Auto trading started");
-    }
-
 }
