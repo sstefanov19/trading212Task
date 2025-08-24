@@ -3,7 +3,7 @@ package org.stefan.backend.dto;
 import java.math.BigDecimal;
 
 public record BalanceDto(
-        Long id,
+        int id,
         BigDecimal total_balance
 ) {
 }
