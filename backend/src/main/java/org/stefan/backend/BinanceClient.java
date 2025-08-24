@@ -2,6 +2,7 @@ package org.stefan.backend;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -10,6 +11,8 @@ import org.springframework.web.socket.client.WebSocketConnectionManager;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import jakarta.annotation.PostConstruct;
+
+
 import java.net.URI;
 import java.util.function.Consumer;
 
@@ -19,12 +22,17 @@ public class BinanceClient {
 
     private Consumer<String> messageConsumer;
     private volatile long lastMessageTime = 0;
+    private volatile String latestPrice;
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
+    public String getLastPrice() {
+        return latestPrice;
+    }
+
     @PostConstruct
     public void connect() {
-        String url = "wss://stream.binance.com:9443/ws/ethusdt@trade";
+        String url = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
 
         StandardWebSocketClient client = new StandardWebSocketClient();
 
@@ -38,6 +46,7 @@ public class BinanceClient {
                 try {
                     JsonNode node = mapper.readTree(message.getPayload());
                     String price = node.get("p").asText();
+                    latestPrice = price;
                     if (messageConsumer != null) {
                         messageConsumer.accept(price);
                     }

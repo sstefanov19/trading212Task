@@ -12,10 +12,10 @@ import java.math.BigDecimal;
 public class Balance {
 
 
-    private Long id;
+    private int id;
     private BigDecimal balance;
 
-    public Balance(Long id , BigDecimal balance) {
+    public Balance(int id , BigDecimal balance) {
         this.id = id;
         this.balance = balance;
     }

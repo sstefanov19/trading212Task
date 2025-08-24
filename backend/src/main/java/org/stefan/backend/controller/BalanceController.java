@@ -27,7 +27,7 @@ public class BalanceController {
     }
 
     @PutMapping("/balance/{id}")
-    public ResponseEntity<String> updateBalance(@PathVariable Long id, @RequestBody BalanceRequest request) {
+    public ResponseEntity<String> updateBalance(@PathVariable int id, @RequestBody BalanceRequest request) {
         try {
             String message = balanceService.updateBalance(id, request.total_balance());
             return ResponseEntity.ok(message);

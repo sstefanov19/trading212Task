@@ -18,10 +18,17 @@ public class BalanceService {
       balanceRepository.insertBalance(balance);
   }
 
-  public String updateBalance(Long id , BigDecimal balance) {
-     int rowEffected =  balanceRepository.updateBalance(id , balance);
+  public BigDecimal getBalanceById(int id) {
+      return balanceRepository.getBalanceByIdFromDB(id);
+  }
 
-     int rowsAffected =  balanceRepository.updateBalance(id , balance);
+  public void removeFromBalance(int id , BigDecimal balance) {
+      balanceRepository.removeFromBalance(balance , id);
+  }
+
+  public String updateBalance(int id , BigDecimal balance) {
+
+     int rowsAffected =  balanceRepository.updateBalance( balance , id);
 
      if(rowsAffected == 0) {
          return "No rows affected updating balance with id: " + id;
