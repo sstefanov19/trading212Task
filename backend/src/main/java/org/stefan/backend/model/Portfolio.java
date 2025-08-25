@@ -8,7 +8,7 @@ public class Portfolio {
 
     BigDecimal balance;
 
-    BigDecimal totalProfit;
+    BigDecimal profit;
 
     int quantity;
 
