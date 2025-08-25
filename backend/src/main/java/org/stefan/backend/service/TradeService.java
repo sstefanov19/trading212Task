@@ -3,6 +3,7 @@ package org.stefan.backend.service;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.stefan.backend.BinanceClient;
+import org.stefan.backend.dto.TradeDto;
 import org.stefan.backend.model.Trade;
 import org.stefan.backend.model.TradeType;
 import org.stefan.backend.repository.TradeRepository;
@@ -14,24 +15,32 @@ import java.time.LocalDateTime;
 @Service
 public class TradeService {
 
+    private static final double PRICE_CHANGE_THRESHOLD = 0.05;
+    private static final Long PORTFOLIO_ID = 1L;
+    private static final int BALANCE_ID = 1;
+
     private final BinanceClient client;
     private final BalanceService balanceService;
-    private final TradeRepository tradeRepository;
-    private BigDecimal referencePrice = null;
-    private Double totalProfit = 0.0;
 
+    private final TradeRepository tradeRepository;
+    private final PortfolioService portfolioService;
+
+    private BigDecimal referencePrice = null;
     private BigDecimal lastBuyPrice = null;
     private Integer lastBuyQuantity = 0;
 
     public TradeService(BinanceClient client,
                         BalanceService balanceService,
-                        TradeRepository tradeRepository) {
+                        TradeRepository tradeRepository,
+                        PortfolioService portfolioService
+    ) {
         this.client = client;
         this.balanceService = balanceService;
         this.tradeRepository = tradeRepository;
+        this.portfolioService = portfolioService;
     }
 
-    @Scheduled(fixedRate = 5000) // every 15 seconds
+    @Scheduled(fixedRate = 5000) // every 5 seconds
     public void autoTrade() {
 
         String lastPriceStr = client.getLastPrice();
@@ -53,19 +62,22 @@ public class TradeService {
 
         System.out.println("Current price: " + currentPrice + ", Change: " + change + "%");
 
-        if (change.compareTo(BigDecimal.valueOf(0.05)) >= 0 && lastBuyPrice != null) {
+        if (change.compareTo(BigDecimal.valueOf(PRICE_CHANGE_THRESHOLD)) >= 0 && lastBuyPrice != null) {
             //SELL
             Double profit = currentPrice.subtract(lastBuyPrice)
                     .multiply(BigDecimal.valueOf(lastBuyQuantity))
                     .doubleValue();
 
-            totalProfit = totalProfit + profit;
-
             BigDecimal earnedAmount = currentPrice.multiply(BigDecimal.valueOf(lastBuyQuantity))
                     .setScale(2, RoundingMode.HALF_UP);
-            balanceService.updateBalance(1 , earnedAmount);
 
-            placeOrder(LocalDateTime.now(), String.valueOf(TradeType.SELL), lastBuyQuantity, currentPrice, totalProfit);
+            balanceService.updateBalance(BALANCE_ID , earnedAmount);
+
+            BigDecimal newBalance = balanceService.getBalanceById(BALANCE_ID);
+
+            portfolioService.saveToPortfolio(newBalance , profit, 0 , PORTFOLIO_ID);
+
+            placeOrder(LocalDateTime.now(), String.valueOf(TradeType.SELL), lastBuyQuantity, currentPrice, profit);
 
 
             lastBuyPrice = null;
@@ -73,18 +85,21 @@ public class TradeService {
 
 
 
-        } else if (change.compareTo(BigDecimal.valueOf(-0.05)) <= 0) {
+        } else if (change.compareTo(BigDecimal.valueOf(-PRICE_CHANGE_THRESHOLD)) <= 0) {
             // BUY
 
             int quantity = getQuantityToBuy(currentPrice);
             if(quantity > 0) {
                 BigDecimal spentAmount = currentPrice.multiply(BigDecimal.valueOf(quantity))
                         .setScale(2, RoundingMode.HALF_UP);
-                balanceService.removeFromBalance(1, spentAmount);
+                balanceService.removeFromBalance(BALANCE_ID, spentAmount);
 
                 lastBuyPrice = currentPrice;
                 lastBuyQuantity = quantity;
 
+                BigDecimal newBalance = balanceService.getBalanceById(BALANCE_ID);
+
+                portfolioService.saveToPortfolio(newBalance , 0.00 , lastBuyQuantity , PORTFOLIO_ID);
 
                 placeOrder(LocalDateTime.now(), String.valueOf(TradeType.BUY), quantity, currentPrice, null);
             }else {
