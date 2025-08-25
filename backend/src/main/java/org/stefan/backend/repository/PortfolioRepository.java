@@ -36,7 +36,9 @@ public class PortfolioRepository {
     }
 
     public void updatePortfolio(BigDecimal balance , Double profit , int quantity , Long id) {
-        String sql = "UPDATE portfolio SET balance = ? , profit = profit + ? , quantity = ? WHERE id = ?";
-        jdbcTemplate.update(sql , balance , profit , quantity , id);
+        int rowsAffected = jdbcTemplate.update(sql , balance , profit , quantity , id);
+        if (rowsAffected == 0) {
+            throw new IllegalArgumentException("Portfolio with id " + id + " does not exist.");
+        }
     }
 }
