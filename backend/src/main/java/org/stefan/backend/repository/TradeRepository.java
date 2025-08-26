@@ -18,8 +18,8 @@ public class TradeRepository {
     public void save(TradeDto trade) {
         String sql =
                 """
-                        INSERT INTO TRADES (date, action , quantity , price , profit)
-                        VALUES (? , ? ,? ,? ,?)
+                        INSERT INTO TRADES (date, action , quantity , price , profit , source)
+                        VALUES (? , ? ,? ,? ,? , ?)
                 """;
 
                 jdbcTemplate.update(sql,
@@ -27,8 +27,8 @@ public class TradeRepository {
                         trade.getActionAsString(),
                         trade.getQuantity(),
                         trade.getPrice(),
-                        trade.getProfit()
-
+                        trade.getProfit(),
+                        trade.getSource()
                         );
     }
 }

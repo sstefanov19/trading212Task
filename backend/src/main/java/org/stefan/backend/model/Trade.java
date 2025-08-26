@@ -22,4 +22,5 @@ public class Trade {
 
     Double profit;
 
+    String source;
 }

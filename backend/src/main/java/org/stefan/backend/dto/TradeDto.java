@@ -22,7 +22,10 @@ public class TradeDto {
 
     private Double profit;
 
+    private String source;
+
     public String getActionAsString() {
         return action != null ? action.name() : null;
     }
+
 }
