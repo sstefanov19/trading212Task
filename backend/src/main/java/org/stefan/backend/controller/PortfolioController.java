@@ -17,8 +17,8 @@ public class PortfolioController {
     }
 
     @GetMapping("/portfolio/{id}")
-    public ResponseEntity<?> getPortfolio(@PathVariable Long id) {
-        PortfolioDto getPortfolio =  portfolioService.getPortfolio(id);
+    public ResponseEntity<?> getPortfolioById(@PathVariable Long id) {
+        PortfolioDto getPortfolio =  portfolioService.getPortfolioById(id);
 
         return ResponseEntity.ok(getPortfolio);
     }
@@ -26,7 +26,7 @@ public class PortfolioController {
     @PutMapping("/portfolio/{id}")
     public ResponseEntity<String> updatePortfolio(@PathVariable Long id , @RequestBody PortfolioRequestDto request) {
 
-        portfolioService.saveToPortfolio(
+        portfolioService.updatePortfolio(
                 request.balance(),
                 request.profit(),
                 request.quantity(),

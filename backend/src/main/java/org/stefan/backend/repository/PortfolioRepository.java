@@ -16,7 +16,7 @@ public class PortfolioRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public PortfolioDto getPortfolioFromDB(Long id) {
+    public PortfolioDto getPortfolioById(Long id) {
         String sql = "SELECT * FROM PORTFOLIO WHERE id = ?";
 
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
@@ -36,6 +36,9 @@ public class PortfolioRepository {
     }
 
     public void updatePortfolio(BigDecimal balance , Double profit , int quantity , Long id) {
+
+        String sql = "UPDATE PORTFOLIO SET balance = ?, profit = profit + ? , quantity = ? , id = ?";
+
         int rowsAffected = jdbcTemplate.update(sql , balance , profit , quantity , id);
         if (rowsAffected == 0) {
             throw new IllegalArgumentException("Portfolio with id " + id + " does not exist.");

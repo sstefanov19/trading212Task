@@ -17,11 +17,11 @@ public class PortfolioService {
         this.portfolioRepository = portfolioRepository;
     }
 
-    public PortfolioDto getPortfolio(Long id) {
-        return portfolioRepository.getPortfolioFromDB(id);
+    public PortfolioDto getPortfolioById(Long id) {
+        return portfolioRepository.getPortfolioById(id);
     }
 
-    public void saveToPortfolio(BigDecimal balance , Double profit , int quantity , Long id) {
+    public void updatePortfolio(BigDecimal balance , Double profit , int quantity , Long id) {
          portfolioRepository.updatePortfolio(
                 balance,
                 profit,

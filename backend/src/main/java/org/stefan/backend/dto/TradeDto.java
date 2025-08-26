@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 public class TradeDto {
 
 
-    LocalDateTime date;
+    private LocalDateTime date;
 
-    TradeType action;
+    private TradeType action;
 
-    Integer quantity;
+    private Integer quantity;
 
-    BigDecimal price;
+    private BigDecimal price;
 
-    Double profit;
+    private Double profit;
 
     public String getActionAsString() {
         return action != null ? action.name() : null;

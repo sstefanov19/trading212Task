@@ -9,12 +9,12 @@ import java.math.BigDecimal;
 @Setter
 public class PortfolioDto {
 
-    Long id;
+    private Long id;
 
-    BigDecimal balance;
+    private BigDecimal balance;
 
-    Double profit;
+    private Double profit;
 
-    int quantity;
+    private int quantity;
 
 }
