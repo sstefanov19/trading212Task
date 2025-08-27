@@ -9,6 +9,7 @@ import org.stefan.backend.model.TradeType;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Repository
 public class TradeRepository {
@@ -36,6 +37,32 @@ public class TradeRepository {
                         );
     }
 
+    public List<TradeDto> getAllTradesBySource(String source) {
+        String sql = "SELECT * FROM TRADES WHERE source = ? ORDER BY date ASC  LIMIT 20";
+
+        try {
+            return jdbcTemplate.query(sql ,
+                    (rs ,  rowNum) -> {
+                        TradeDto trade = new TradeDto();
+                        trade.setDate(rs.getTimestamp("date").toLocalDateTime());
+                        trade.setAction(TradeType.valueOf(rs.getString("action")));
+                        trade.setQuantity(rs.getDouble("quantity"));
+                        trade.setPrice(new BigDecimal(rs.getString("price")));
+                        trade.setProfit(rs.getDouble("profit"));
+                        trade.setSource(rs.getString("source"));
+                        return trade;
+                    },
+                    source);
+        }catch(EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    public void deleteAllBacktestTrades() {
+        String sql = "DELETE FROM trades WHERE source = 'BACKTEST'";
+        jdbcTemplate.update(sql);
+    }
+
     public Trade findTopByActionOrderByDateDesc(TradeType action) {
         String sql = "SELECT * FROM TRADES WHERE action = ? ORDER BY date DESC LIMIT 1";
 
@@ -46,7 +73,7 @@ public class TradeRepository {
                         trade.setId(rs.getLong("id"));
                         trade.setDate(rs.getTimestamp("date").toLocalDateTime());
                         trade.setAction(TradeType.valueOf(rs.getString("action")));
-                        trade.setQuantity(rs.getInt("quantity"));
+                        trade.setQuantity(rs.getDouble("quantity"));
                         trade.setPrice(new BigDecimal(rs.getString("price")));
                         trade.setProfit(rs.getDouble("profit"));
                         trade.setSource(rs.getString("source"));

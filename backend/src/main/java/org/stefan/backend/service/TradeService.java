@@ -12,6 +12,7 @@ import org.stefan.backend.repository.TradeRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -20,7 +21,7 @@ public class TradeService {
 
     private static final double PRICE_CHANGE_THRESHOLD = 0.05;
     private static final Long PORTFOLIO_ID = 1L;
-    private static final double STOP_LOSS_THRESHOLD = 0.04;
+    private static final double STOP_LOSS_THRESHOLD = 0.07;
     private static final int BALANCE_ID = 1;
 
     private AtomicBoolean isTrading = new AtomicBoolean(false);
@@ -35,7 +36,7 @@ public class TradeService {
 
     private BigDecimal referencePrice = null;
     private BigDecimal lastBuyPrice = null;
-    private Integer lastBuyQuantity = 0;
+    private BigDecimal lastBuyQuantity = BigDecimal.ZERO;
 
     public TradeService(TaskScheduler taskScheduler,
                         BinanceClient client,
@@ -53,14 +54,18 @@ public class TradeService {
 
     @PostConstruct
     public void init() {
-        int quantity = portfolioService.getPortfolioQuantityById(PORTFOLIO_ID);
+        Double quantity = portfolioService.getPortfolioQuantityById(PORTFOLIO_ID);
         if (quantity > 0) {
-
             Trade lastBuyTrade = tradeRepository.findTopByActionOrderByDateDesc(TradeType.BUY);
             if (lastBuyTrade != null) {
                 lastBuyPrice = lastBuyTrade.getPrice();
+                lastBuyQuantity = BigDecimal.valueOf(lastBuyTrade.getQuantity());
             }
         }
+    }
+
+    public List<TradeDto> getAllTradesBySource(String source) {
+        return tradeRepository.getAllTradesBySource(source);
     }
 
     public void autoTrade() {
@@ -129,33 +134,29 @@ public class TradeService {
         if (checkStopLoss(currentPrice)) {
             return true;
         }
-
         if (shouldSell(priceChange)) {
             return executeSell(currentPrice);
         }
-
         if (shouldBuy(priceChange)) {
             return executeBuy(currentPrice);
         }
-
         return false;
     }
 
     private boolean checkStopLoss(BigDecimal currentPrice) {
         if (lastBuyPrice != null) {
-            BigDecimal percentageChange = currentPrice.subtract(lastBuyPrice)
-                    .divide(lastBuyPrice, 8, RoundingMode.HALF_UP);
 
+            BigDecimal percentageLoss = currentPrice.subtract(lastBuyPrice)
+                    .divide(lastBuyPrice, 4, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(100));
 
-            BigDecimal percentageForLog = percentageChange.multiply(BigDecimal.valueOf(100));
             System.out.println("Stop loss check - Current price: " + currentPrice
                     + ", Buy price: " + lastBuyPrice
-                    + ", Change: " + percentageForLog + "%"
-                    + ", Threshold: -" + (STOP_LOSS_THRESHOLD * 100) + "%");
+                    + ", Loss: " + percentageLoss + "%"
+                    + ", Threshold: -7%");
 
-            // If percentage loss is greater than threshold (e.g. -0.03 for 3% loss)
-            if (percentageChange.compareTo(BigDecimal.valueOf(-STOP_LOSS_THRESHOLD)) <= 0) {
-                System.out.println("🚨 Stop loss triggered at " + percentageForLog + "% loss");
+            if (percentageLoss.compareTo(BigDecimal.valueOf(STOP_LOSS_THRESHOLD)) <= 0) {
+                System.out.println("🚨 Stop loss triggered! Loss: " + percentageLoss + "%");
                 return executeSell(currentPrice);
             }
         }
@@ -171,22 +172,23 @@ public class TradeService {
     }
 
     private boolean executeSell(BigDecimal currentPrice) {
-        int currentQuantity = portfolioService.getPortfolioQuantityById(PORTFOLIO_ID);
 
-        if (currentQuantity > 0) {
+        if (lastBuyQuantity.compareTo(BigDecimal.ZERO) > 0) {
             Double profit = currentPrice.subtract(lastBuyPrice)
-                    .multiply(BigDecimal.valueOf(currentQuantity))
+                    .multiply(lastBuyQuantity)
+                    .setScale(2, RoundingMode.HALF_UP)
                     .doubleValue();
 
-            BigDecimal earnedAmount = currentPrice.multiply(BigDecimal.valueOf(currentQuantity))
+            BigDecimal earnedAmount = currentPrice.multiply(lastBuyQuantity)
                     .setScale(2, RoundingMode.HALF_UP);
 
             balanceService.updateBalance(BALANCE_ID, earnedAmount);
             BigDecimal newBalance = balanceService.getBalanceById(BALANCE_ID);
-            portfolioService.updatePortfolio(newBalance, profit, 0, PORTFOLIO_ID);
-            placeOrder(LocalDateTime.now(), String.valueOf(TradeType.SELL), currentQuantity, currentPrice, profit, "LIVE");
+            portfolioService.updatePortfolio(newBalance, profit, 0.0, PORTFOLIO_ID);
+            placeOrder(LocalDateTime.now(), String.valueOf(TradeType.SELL), lastBuyQuantity.doubleValue(), currentPrice, profit, "LIVE");
 
             lastBuyPrice = null;
+            lastBuyQuantity = BigDecimal.ZERO;
             return true;
         }
         return false;
@@ -194,36 +196,34 @@ public class TradeService {
 
     private boolean executeBuy(BigDecimal currentPrice) {
         currentPrice = currentPrice.setScale(2 , RoundingMode.HALF_UP);
-        int quantity = getQuantityToBuy(currentPrice);
-        if (quantity > 0) {
-            BigDecimal spentAmount = currentPrice.multiply(BigDecimal.valueOf(quantity))
+        BigDecimal balance = balanceService.getBalanceById(BALANCE_ID);
+
+        BigDecimal quantity = balance.divide(currentPrice, 2, RoundingMode.HALF_UP);
+
+        if (quantity.compareTo(BigDecimal.ZERO) > 0) {
+            BigDecimal spentAmount = currentPrice.multiply(quantity)
                     .setScale(2, RoundingMode.HALF_UP);
-            balanceService.removeFromBalance(BALANCE_ID, spentAmount);
 
-            lastBuyPrice = currentPrice;
-            lastBuyQuantity = quantity;
+            if (spentAmount.compareTo(balance) <= 0) {
+                lastBuyPrice = currentPrice;
+                lastBuyQuantity = quantity;
 
-            BigDecimal newBalance = balanceService.getBalanceById(BALANCE_ID);
-            portfolioService.updatePortfolio(newBalance, 0.00, lastBuyQuantity, PORTFOLIO_ID);
-            placeOrder(LocalDateTime.now(), String.valueOf(TradeType.BUY), quantity, currentPrice, null , "LIVE");
-
+                balanceService.removeFromBalance(BALANCE_ID, spentAmount);
+                BigDecimal newBalance = balanceService.getBalanceById(BALANCE_ID);
+                portfolioService.updatePortfolio(newBalance, 0.00, lastBuyQuantity.doubleValue(), PORTFOLIO_ID);
+                placeOrder(LocalDateTime.now(), String.valueOf(TradeType.BUY), quantity.doubleValue(), currentPrice, null , "LIVE");
             return true;
-        } else {
+            }
+        }
             System.out.println("Insufficient balance to buy");
             return false;
         }
-    }
-    private int getQuantityToBuy(BigDecimal price) {
-        try {
-            BigDecimal balance = balanceService.getBalanceById(1);
-            return balance.divide(price, RoundingMode.DOWN).intValue();
-        } catch (Exception e) {
-            System.out.println("Error getting balance: " + e.getMessage());
-            return 0;
-        }
+
+    public void deleteAllBacktestTrades() {
+        tradeRepository.deleteAllBacktestTrades();
     }
 
-    public void placeOrder(LocalDateTime date, String action, int qty, BigDecimal price, Double profit , String source) {
+    public void placeOrder(LocalDateTime date, String action, Double qty, BigDecimal price, Double profit , String source) {
 
         Trade trade = new Trade();
         trade.setDate(date);

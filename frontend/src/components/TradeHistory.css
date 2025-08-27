@@ -1,0 +1,17 @@
+.live-trade-history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.live-trade-history-table th,
+.live-trade-history-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+
+
+.live-trade-history-empty {
+  text-align: center;
+  padding: 8px;
+}

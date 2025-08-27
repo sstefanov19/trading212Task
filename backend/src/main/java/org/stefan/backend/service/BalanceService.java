@@ -26,6 +26,10 @@ public class BalanceService {
       balanceRepository.removeFromBalance(balance , id);
   }
 
+  public void setInitialBalance(Integer id, BigDecimal balance) {
+      balanceRepository.setInitialBalance(id , balance);
+  }
+
   public String updateBalance(int id , BigDecimal balance) {
 
      int rowsAffected =  balanceRepository.updateBalance( balance , id);

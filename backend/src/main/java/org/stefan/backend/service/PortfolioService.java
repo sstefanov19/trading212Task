@@ -21,7 +21,7 @@ public class PortfolioService {
         return portfolioRepository.getPortfolioById(id);
     }
 
-    public void updatePortfolio(BigDecimal balance , Double profit , int quantity , Long id) {
+    public void updatePortfolio(BigDecimal balance , Double profit , Double quantity , Long id) {
          portfolioRepository.updatePortfolio(
                 balance,
                 profit,
@@ -30,11 +30,11 @@ public class PortfolioService {
         );
     }
 
-    public int getPortfolioQuantityById(Long id) {
+    public Double getPortfolioQuantityById(Long id) {
         return portfolioRepository.getPortfolioQuantityById(id);
     }
 
-    public Double getPortfolioProfit(Long id) {
-        return portfolioRepository.getProfit(id);
+    public void setInitialPortfolio(BigDecimal balance, Double profit, Double quantity, Long id) {
+        portfolioRepository.setInitialPortfolio(balance,profit,quantity,id);
     }
 }

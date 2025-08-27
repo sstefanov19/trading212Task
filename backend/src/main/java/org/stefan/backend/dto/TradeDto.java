@@ -16,7 +16,7 @@ public class TradeDto {
 
     private TradeType action;
 
-    private Integer quantity;
+    private Double quantity;
 
     private BigDecimal price;
 

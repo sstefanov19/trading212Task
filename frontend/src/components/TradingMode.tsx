@@ -1,6 +1,7 @@
 import { useFetchPortfolioData } from "../hooks/useFetchPortfolioData";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import "./TradingMode.css";
+import TradeHistory from "./TradeHistory";
 
 
 
@@ -46,6 +47,7 @@ export default function TradingMode() {
           </LineChart>
         </ResponsiveContainer>
       </div>
+      <TradeHistory source="LIVE" />
     </div>
   );
 }

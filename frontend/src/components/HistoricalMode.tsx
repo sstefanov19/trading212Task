@@ -1,6 +1,7 @@
 
 
 import { useFetchPortfolioData } from "../hooks/useFetchPortfolioData";
+import TradeHistory from "./TradeHistory";
 
 export default function HistoricalMode({ symbol }) {
 
@@ -12,15 +13,17 @@ export default function HistoricalMode({ symbol }) {
 
   return (
     <div className="historical-mode">
-      <h2>Historical Backtest Results</h2>
+      <h2>Historical Backtest Results for the past 30 days every hour</h2>
       <div>
         <p><strong>Symbol:</strong> {symbol}</p>
       </div>
       <div>
 
         <ul>
-          <li> {data?.data.profit}</li>
-
+          <li>Profit :  {data?.data.profit}</li>
+            <div>
+                <TradeHistory source="BACKTEST" />
+            </div>
         </ul>
       </div>
     </div>

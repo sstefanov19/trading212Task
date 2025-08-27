@@ -6,7 +6,6 @@ import HistoricalMode from "./components/HistoricalMode.tsx";
 function App() {
 
     const [modes , setModes] = useState("");
-    const [symbol , setSymbol] = useState("");
 
 
     async function startTrading() {
@@ -35,7 +34,7 @@ function App() {
         }
     }
 
-    async function startHistoricalTrade() {
+    async function startHistoricalTrade(symbol : string) {
         try {
             const response = await fetch(`http://localhost:8080/api/v1/backtest/${symbol}` , {
                 method: "POST"
@@ -60,12 +59,12 @@ function App() {
             {modes === "Trade" ? (
                 <TradingMode />
             ) : modes === 'Historical' ? (
-                <HistoricalMode symbol={symbol} />
+                <HistoricalMode symbol={"ETH"} />
             ):
             (
                 <>
                     <button onClick={() => startTrading()}>Live Trade</button>
-                    <button onClick={() => { setSymbol("BTCUSDT"); startHistoricalTrade(); }}>Historical Trade</button>
+                    <button onClick={() => startHistoricalTrade("ETHUSDT")}>Historical Trade on ETH</button>
                 </>
             )}
         </div>

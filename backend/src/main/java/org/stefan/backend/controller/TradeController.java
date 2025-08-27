@@ -1,10 +1,11 @@
 package org.stefan.backend.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.stefan.backend.dto.TradeDto;
 import org.stefan.backend.service.TradeService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/trade")
@@ -34,6 +35,14 @@ public class TradeController {
             return ResponseEntity.ok("Trading has stopped");
         }
         return ResponseEntity.badRequest().body("Trading has already been stoped");
+    }
+
+    @GetMapping("/{source}")
+    public ResponseEntity<List<TradeDto>> getAllTradesBySource(@PathVariable String source) {
+
+        List<TradeDto> trades = tradeService.getAllTradesBySource(source);
+
+        return  ResponseEntity.ok(trades);
     }
 
 }

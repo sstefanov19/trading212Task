@@ -16,7 +16,7 @@ public class Trade {
 
     TradeType action;
 
-    Integer quantity;
+    Double quantity;
 
     BigDecimal price;
 

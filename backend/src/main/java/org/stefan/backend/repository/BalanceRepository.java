@@ -32,6 +32,10 @@ public class BalanceRepository {
         jdbcTemplate.update(sql  , balance , id);
     }
 
+    public void setInitialBalance(Integer id, BigDecimal balance) {
+        String sql = "UPDATE BALANCE SET total_balance = ? WHERE id = ?";
+        jdbcTemplate.update(sql, balance, id);
+    }
 
     public int updateBalance( BigDecimal balance , int id) {
         String sql = "UPDATE BALANCE SET total_balance = total_balance + ? WHERE id = ?";

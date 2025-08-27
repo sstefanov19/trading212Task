@@ -25,7 +25,7 @@ public class PortfolioRepository {
             dto.setId(rs.getLong("id"));
             dto.setBalance(rs.getBigDecimal("balance"));
             dto.setProfit(rs.getDouble("profit"));
-            dto.setQuantity(rs.getInt("quantity"));
+            dto.setQuantity(rs.getDouble("quantity"));
             return dto;
         }, id);
     }
@@ -36,7 +36,16 @@ public class PortfolioRepository {
         return jdbcTemplate.queryForObject(sql , Double.class , id);
     }
 
-    public void updatePortfolio(BigDecimal balance , Double profit , int quantity , Long id) {
+    public void setInitialPortfolio(BigDecimal balance, Double profit, Double quantity, Long id) {
+        String sql = "UPDATE PORTFOLIO SET balance = ?, profit = ?, quantity = ? WHERE id = ?";
+
+        int rowsAffected = jdbcTemplate.update(sql, balance, profit, quantity, id);
+        if (rowsAffected == 0) {
+            throw new IllegalArgumentException("Portfolio with id " + id + " does not exist.");
+        }
+    }
+
+    public void updatePortfolio(BigDecimal balance , Double profit , Double quantity , Long id) {
 
         String sql = "UPDATE PORTFOLIO SET balance = ?, profit = profit + ? , quantity = ? WHERE id = ?";
 
@@ -46,13 +55,13 @@ public class PortfolioRepository {
         }
     }
 
-    public int getPortfolioQuantityById(Long id) {
+    public Double getPortfolioQuantityById(Long id) {
         String sql = "SELECT quantity FROM PORTFOLIO WHERE id = ?";
         try {
-            Integer quantity = jdbcTemplate.queryForObject(sql, Integer.class, id);
-            return quantity != null ? quantity : 0;
+            Double quantity = jdbcTemplate.queryForObject(sql, Double.class, id);
+            return quantity != null ? quantity : 0.00;
         } catch (EmptyResultDataAccessException e) {
-            return 0;
+            return 0.00;
         }
     }
 }

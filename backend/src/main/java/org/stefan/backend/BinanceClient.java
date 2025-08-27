@@ -32,7 +32,7 @@ public class BinanceClient {
 
     @PostConstruct
     public void connect() {
-        String url = "wss://stream.binance.com:9443/ws/bnbusdt@trade";
+        String url = "wss://stream.binance.com:9443/ws/ethusdt@trade";
 
         StandardWebSocketClient client = new StandardWebSocketClient();
 

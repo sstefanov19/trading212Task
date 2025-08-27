@@ -15,6 +15,6 @@ public class PortfolioDto {
 
     private Double profit;
 
-    private int quantity;
+    private Double quantity;
 
 }

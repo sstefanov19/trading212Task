@@ -16,5 +16,6 @@ export const useFetchPortfolioData = (id) => {
             return axios.get<Portfolio>(`http://localhost:8080/api/v1/portfolio/${id}`);
         },
         staleTime: 1000,
+        refetchInterval: 2000,
     });
 }
