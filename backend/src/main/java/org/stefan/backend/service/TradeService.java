@@ -1,7 +1,7 @@
 package org.stefan.backend.service;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.stefan.backend.BinanceClient;
 import org.stefan.backend.dto.TradeDto;
@@ -50,6 +50,18 @@ public class TradeService {
         this.portfolioService = portfolioService;
     }
 
+
+    @PostConstruct
+    public void init() {
+        int quantity = portfolioService.getPortfolioQuantityById(PORTFOLIO_ID);
+        if (quantity > 0) {
+
+            Trade lastBuyTrade = tradeRepository.findTopByActionOrderByDateDesc(TradeType.BUY);
+            if (lastBuyTrade != null) {
+                lastBuyPrice = lastBuyTrade.getPrice();
+            }
+        }
+    }
 
     public void autoTrade() {
 
@@ -131,11 +143,10 @@ public class TradeService {
 
     private boolean checkStopLoss(BigDecimal currentPrice) {
         if (lastBuyPrice != null) {
-            // Calculate percentage loss (negative means loss)
             BigDecimal percentageChange = currentPrice.subtract(lastBuyPrice)
                     .divide(lastBuyPrice, 8, RoundingMode.HALF_UP);
 
-            // Convert to percentage for logging
+
             BigDecimal percentageForLog = percentageChange.multiply(BigDecimal.valueOf(100));
             System.out.println("Stop loss check - Current price: " + currentPrice
                     + ", Buy price: " + lastBuyPrice
@@ -160,24 +171,29 @@ public class TradeService {
     }
 
     private boolean executeSell(BigDecimal currentPrice) {
-        Double profit = currentPrice.subtract(lastBuyPrice)
-                .multiply(BigDecimal.valueOf(lastBuyQuantity))
-                .doubleValue();
+        int currentQuantity = portfolioService.getPortfolioQuantityById(PORTFOLIO_ID);
 
-        BigDecimal earnedAmount = currentPrice.multiply(BigDecimal.valueOf(lastBuyQuantity))
-                .setScale(2, RoundingMode.HALF_UP);
+        if (currentQuantity > 0) {
+            Double profit = currentPrice.subtract(lastBuyPrice)
+                    .multiply(BigDecimal.valueOf(currentQuantity))
+                    .doubleValue();
 
-        balanceService.updateBalance(BALANCE_ID, earnedAmount);
-        BigDecimal newBalance = balanceService.getBalanceById(BALANCE_ID);
-        portfolioService.updatePortfolio(newBalance, profit, 0, PORTFOLIO_ID);
-        placeOrder(LocalDateTime.now(), String.valueOf(TradeType.SELL), lastBuyQuantity, currentPrice, profit , "LIVE");
+            BigDecimal earnedAmount = currentPrice.multiply(BigDecimal.valueOf(currentQuantity))
+                    .setScale(2, RoundingMode.HALF_UP);
 
-        lastBuyPrice = null;
-        lastBuyQuantity = 0;
-        return true;
+            balanceService.updateBalance(BALANCE_ID, earnedAmount);
+            BigDecimal newBalance = balanceService.getBalanceById(BALANCE_ID);
+            portfolioService.updatePortfolio(newBalance, profit, 0, PORTFOLIO_ID);
+            placeOrder(LocalDateTime.now(), String.valueOf(TradeType.SELL), currentQuantity, currentPrice, profit, "LIVE");
+
+            lastBuyPrice = null;
+            return true;
+        }
+        return false;
     }
 
     private boolean executeBuy(BigDecimal currentPrice) {
+        currentPrice = currentPrice.setScale(2 , RoundingMode.HALF_UP);
         int quantity = getQuantityToBuy(currentPrice);
         if (quantity > 0) {
             BigDecimal spentAmount = currentPrice.multiply(BigDecimal.valueOf(quantity))

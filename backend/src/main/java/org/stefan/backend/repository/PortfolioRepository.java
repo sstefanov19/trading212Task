@@ -1,5 +1,6 @@
 package org.stefan.backend.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.stefan.backend.dto.PortfolioDto;
@@ -37,11 +38,21 @@ public class PortfolioRepository {
 
     public void updatePortfolio(BigDecimal balance , Double profit , int quantity , Long id) {
 
-        String sql = "UPDATE PORTFOLIO SET balance = ?, profit = profit + ? , quantity = ? , id = ?";
+        String sql = "UPDATE PORTFOLIO SET balance = ?, profit = profit + ? , quantity = ? WHERE id = ?";
 
         int rowsAffected = jdbcTemplate.update(sql , balance , profit , quantity , id);
         if (rowsAffected == 0) {
             throw new IllegalArgumentException("Portfolio with id " + id + " does not exist.");
+        }
+    }
+
+    public int getPortfolioQuantityById(Long id) {
+        String sql = "SELECT quantity FROM PORTFOLIO WHERE id = ?";
+        try {
+            Integer quantity = jdbcTemplate.queryForObject(sql, Integer.class, id);
+            return quantity != null ? quantity : 0;
+        } catch (EmptyResultDataAccessException e) {
+            return 0;
         }
     }
 }

@@ -30,6 +30,10 @@ public class PortfolioService {
         );
     }
 
+    public int getPortfolioQuantityById(Long id) {
+        return portfolioRepository.getPortfolioQuantityById(id);
+    }
+
     public Double getPortfolioProfit(Long id) {
         return portfolioRepository.getProfit(id);
     }

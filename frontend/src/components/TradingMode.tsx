@@ -5,7 +5,7 @@ import "./TradingMode.css";
 
 
 export default function TradingMode() {
-  const { data, error, isLoading } = useFetchPortfolioData();
+  const { data, error, isLoading } = useFetchPortfolioData(1);
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error.message}</div>;
 
@@ -27,6 +27,7 @@ export default function TradingMode() {
 
   return (
     <div className="portfolio">
+        <h1>Live Trading</h1>
       <p>Balance : {balance}</p>
       <p className={`${isProfitPositive ? "green" : "red"}`}>Profit: {profit}</p>
       <p>Quantity of stock : {data?.data.quantity}</p>
