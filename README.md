@@ -42,15 +42,15 @@ Frontend runs at: http://localhost:5173
 
 📡 API Endpoints
 
-POST /trade/buy
+POST /trade/start
 
-POST /trade/sell
+POST /trade/stop
 
 GET /portfolio
 
 GET /balance
 
-POST /backtest/start
+POST /backtest/{ticker}
 
 📊 Features
 
