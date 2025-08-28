@@ -1,11 +1,9 @@
-import TradingMode from "./components/TradingMode.tsx"
 import "./App.css"
-import { useState } from "react"
-import HistoricalMode from "./components/HistoricalMode.tsx";
+import { Link } from "@tanstack/react-router";
 
 function App() {
 
-    const [modes , setModes] = useState("");
+
 
 
     async function startTrading() {
@@ -15,24 +13,12 @@ function App() {
                 method: "POST"
             });
             if (!response.ok) throw new Error("Couldn't start trading");
-            setModes("Trade");
+
         } catch (err: any) {
             console.error(err.message);
         }
     }
 
-    async function stopTrading() {
-
-        try {
-            const response = await fetch("http://localhost:8080/api/v1/trade/stop", {
-                method: "POST"
-            });
-            if (!response.ok) throw new Error("Couldn't stop trading");
-            setModes("");
-        } catch (err: any) {
-           console.error(err.message);
-        }
-    }
 
     async function startHistoricalTrade(symbol : string) {
         try {
@@ -41,7 +27,7 @@ function App() {
             });
             if(!response.ok) throw new Error("Couldn't start historical trade")
 
-            setModes("Historical");
+
         }catch(err : any) {
             console.error(err.message);
         }
@@ -50,24 +36,15 @@ function App() {
 
   return (
     <div className="main-page">
-        {modes !== "" ? (
-            <button className="back" onClick={() => stopTrading()}>Go back</button>
-            ) : (
-                <h1>Automated Trading bot task for Trading212</h1>
-            )}
-        <div className="modes">
-            {modes === "Trade" ? (
-                <TradingMode />
-            ) : modes === 'Historical' ? (
-                <HistoricalMode symbol={"ETH"} />
-            ):
-            (
-                <>
-                    <button onClick={() => startTrading()}>Live Trade</button>
-                    <button onClick={() => startHistoricalTrade("ETHUSDT")}>Historical Trade on ETH</button>
-                </>
-            )}
-        </div>
+      <h1>Automated Trading bot task for Trading212</h1>
+      <div className="modes">
+        <Link to="/trade">
+          <button onClick={() => startTrading()}>Live Trade</button>
+        </Link>
+        <Link to="/historytrade">
+          <button onClick={() => startHistoricalTrade("ETHUSDT")}>Historical Trade on ETH</button>
+        </Link>
+      </div>
     </div>
   )
 }

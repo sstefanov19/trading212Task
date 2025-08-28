@@ -1,5 +1,6 @@
 
 
+import { Link } from "@tanstack/react-router";
 import { useFetchPortfolioData } from "../hooks/useFetchPortfolioData";
 import TradeHistory from "./TradeHistory";
 
@@ -13,6 +14,9 @@ export default function HistoricalMode({ symbol }) {
 
   return (
     <div className="historical-mode">
+        <Link to="/">
+        <button>Back</button>
+        </Link>
       <h2>Historical Backtest Results for the past 30 days every hour</h2>
       <div>
         <p><strong>Symbol:</strong> {symbol}</p>

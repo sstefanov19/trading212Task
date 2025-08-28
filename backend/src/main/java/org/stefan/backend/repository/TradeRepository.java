@@ -38,7 +38,7 @@ public class TradeRepository {
     }
 
     public List<TradeDto> getAllTradesBySource(String source) {
-        String sql = "SELECT * FROM TRADES WHERE source = ? ORDER BY date ASC  LIMIT 20";
+        String sql = "SELECT * FROM TRADES WHERE source = ? ORDER BY date DESC LIMIT 20";
 
         try {
             return jdbcTemplate.query(sql ,

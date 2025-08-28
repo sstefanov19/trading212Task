@@ -22,6 +22,11 @@ export default function TradeHistory({ source }: TradeHistoryProps) {
 
     const trades: Trade[] = data?.data ?? [];
 
+    function formatDate(dateString: string) {
+        const date = new Date(dateString);
+        return date.toLocaleString();
+    }
+
     return (
         <div style={{ marginTop: 42 }}>
             <h2>Live Trade History</h2>
@@ -44,7 +49,7 @@ export default function TradeHistory({ source }: TradeHistoryProps) {
                     ) : (
                         trades.map((trade, idx) => (
                             <tr key={idx}>
-                                <td>{trade.date}</td>
+                                <td>{formatDate(trade.date)}</td>
                                 <td>{trade.action}</td>
                                 <td>{trade.quantity}</td>
                                 <td>{trade.price}</td>

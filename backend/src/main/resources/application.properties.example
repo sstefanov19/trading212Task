@@ -1,0 +1,12 @@
+spring.application.name=backend
+
+spring.datasource.url=jdbc:postgresql://localhost:port/database_name
+spring.datasource.username=username
+spring.datasource.password=password
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+
+spring.datasource.hikari.keepalive-time=45000
+spring.datasource.hikari.max-lifetime=60000
+spring.datasource.hikari.validation-timeout=3000
+spring.datasource.hikari.connection-timeout=10000

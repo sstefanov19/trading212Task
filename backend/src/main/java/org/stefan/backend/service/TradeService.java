@@ -148,14 +148,15 @@ public class TradeService {
 
             BigDecimal percentageLoss = currentPrice.subtract(lastBuyPrice)
                     .divide(lastBuyPrice, 4, RoundingMode.HALF_UP)
-                    .multiply(BigDecimal.valueOf(100));
+                    .multiply(BigDecimal.valueOf(100))
+                    .abs();
 
             System.out.println("Stop loss check - Current price: " + currentPrice
                     + ", Buy price: " + lastBuyPrice
                     + ", Loss: " + percentageLoss + "%"
                     + ", Threshold: -7%");
 
-            if (percentageLoss.compareTo(BigDecimal.valueOf(STOP_LOSS_THRESHOLD)) <= 0) {
+            if (percentageLoss.compareTo(BigDecimal.valueOf(STOP_LOSS_THRESHOLD)) >= 0) {
                 System.out.println("🚨 Stop loss triggered! Loss: " + percentageLoss + "%");
                 return executeSell(currentPrice);
             }
@@ -199,21 +200,17 @@ public class TradeService {
         BigDecimal balance = balanceService.getBalanceById(BALANCE_ID);
 
         BigDecimal quantity = balance.divide(currentPrice, 2, RoundingMode.HALF_UP);
+        BigDecimal spentAmount = currentPrice.multiply(quantity).setScale(2, RoundingMode.HALF_UP);
 
-        if (quantity.compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal spentAmount = currentPrice.multiply(quantity)
-                    .setScale(2, RoundingMode.HALF_UP);
+        if (quantity.compareTo(BigDecimal.ZERO) > 0 && spentAmount.compareTo(balance) <= 0) {
+            lastBuyPrice = currentPrice;
+            lastBuyQuantity = quantity.setScale(2, RoundingMode.HALF_UP);
 
-            if (spentAmount.compareTo(balance) <= 0) {
-                lastBuyPrice = currentPrice;
-                lastBuyQuantity = quantity;
-
-                balanceService.removeFromBalance(BALANCE_ID, spentAmount);
-                BigDecimal newBalance = balanceService.getBalanceById(BALANCE_ID);
-                portfolioService.updatePortfolio(newBalance, 0.00, lastBuyQuantity.doubleValue(), PORTFOLIO_ID);
-                placeOrder(LocalDateTime.now(), String.valueOf(TradeType.BUY), quantity.doubleValue(), currentPrice, null , "LIVE");
+            balanceService.removeFromBalance(BALANCE_ID, spentAmount);
+            BigDecimal newBalance = balanceService.getBalanceById(BALANCE_ID);
+            portfolioService.updatePortfolio(newBalance, 0.00, lastBuyQuantity.doubleValue(), PORTFOLIO_ID);
+            placeOrder(LocalDateTime.now(), String.valueOf(TradeType.BUY), lastBuyQuantity.doubleValue(), currentPrice, null, "LIVE");
             return true;
-            }
         }
             System.out.println("Insufficient balance to buy");
             return false;
