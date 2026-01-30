@@ -13,7 +13,6 @@ public class TradeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public void saveTrade(Trade trade) {
         jdbcTemplate.update(
                 "INSERT INTO trades (userid, type, symbol, price, quantity, total, timestamp) VALUES (?,?,?,?,?,?,?)",
@@ -23,10 +22,21 @@ public class TradeRepository {
                 trade.getPrice(),
                 trade.getQuantity(),
                 trade.getTotal(),
-                trade.getTimestamp()
-        );
+                trade.getTimestamp());
     }
 
-
+    public java.util.List<Trade> findByUserId(Long userId) {
+        return jdbcTemplate.query(
+                "SELECT userid, type, symbol, price, quantity, total, timestamp FROM trades WHERE userid = ? ORDER BY timestamp DESC",
+                (rs, rowNum) -> new Trade(
+                        rs.getLong("userid"),
+                        org.example.tasktrading212.model.TradeType.valueOf(rs.getString("type")),
+                        rs.getString("symbol"),
+                        rs.getBigDecimal("price"),
+                        rs.getBigDecimal("quantity"),
+                        rs.getBigDecimal("total"),
+                        rs.getTimestamp("timestamp").toLocalDateTime()),
+                userId);
+    }
 
 }

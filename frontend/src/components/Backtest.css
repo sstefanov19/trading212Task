@@ -1,0 +1,87 @@
+.backtest {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.backtest h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.backtest-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.config-card h3,
+.results-card h3,
+.chart-card h3 {
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+}
+
+.config-card button {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.result-row:last-child {
+  border-bottom: none;
+}
+
+.result-row .label {
+  color: var(--text-secondary);
+}
+
+.result-row .value {
+  font-weight: 600;
+}
+
+.result-row.highlight {
+  background-color: var(--bg-tertiary);
+  margin: 16px -20px -20px;
+  padding: 16px 20px;
+  border-radius: 0 0 8px 8px;
+}
+
+.result-row.highlight .value {
+  font-size: 20px;
+}
+
+.chart-card {
+  min-height: 350px;
+}
+
+@media (max-width: 768px) {
+  .backtest-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,21 +1,44 @@
 package org.example.tasktrading212.service;
 
+import org.example.tasktrading212.dto.PortfolioResponse;
 import org.example.tasktrading212.model.Portfolio;
 import org.example.tasktrading212.repository.PortfolioRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 public class PortfolioService {
 
     private final PortfolioRepository portfolioRepository;
+    private final BinancePriceService binancePriceService;
 
-
-    public PortfolioService(PortfolioRepository portfolioRepository) {
+    public PortfolioService(PortfolioRepository portfolioRepository, BinancePriceService binancePriceService) {
         this.portfolioRepository = portfolioRepository;
+        this.binancePriceService = binancePriceService;
+    }
 
+    public PortfolioResponse getPortfolioResponse(Long userId) {
+        Portfolio portfolio = getPortfolioByUserId(userId);
+
+        BigDecimal btcValue = portfolio.getBtcHoldings().multiply(binancePriceService.getCurrentPrice());
+        BigDecimal currentValue = portfolio.getUsdtBalance().add(btcValue);
+        BigDecimal profitLoss = currentValue.subtract(portfolio.getInitialBalance());
+        BigDecimal profitLossPercent = portfolio.getInitialBalance().compareTo(BigDecimal.ZERO) > 0
+                ? profitLoss.divide(portfolio.getInitialBalance(), 4, RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal("100"))
+                : BigDecimal.ZERO;
+
+        return new PortfolioResponse(
+                portfolio.getUserId(),
+                portfolio.getUsdtBalance(),
+                portfolio.getBtcHoldings(),
+                portfolio.getInitialBalance(),
+                currentValue.setScale(2, RoundingMode.HALF_UP),
+                profitLoss.setScale(2, RoundingMode.HALF_UP),
+                profitLossPercent.setScale(2, RoundingMode.HALF_UP));
     }
 
     public void createPortfolio(Long userId) {

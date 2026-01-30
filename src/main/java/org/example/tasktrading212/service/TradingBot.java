@@ -2,16 +2,20 @@ package org.example.tasktrading212.service;
 
 import jakarta.annotation.PreDestroy;
 import org.example.tasktrading212.model.TradeSignal;
+import org.example.tasktrading212.strategy.StrategyFactory;
+import org.example.tasktrading212.strategy.StrategyType;
 import org.example.tasktrading212.strategy.TradingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class TradingBot {
@@ -20,30 +24,35 @@ public class TradingBot {
     private static final String SYMBOL = "BTCUSDT";
 
     private final TradingService tradingService;
-    private final TradingStrategy strategy;
-    private final ExecutorService tradingThread;
+    private final StrategyFactory strategyFactory;
+    private final ScheduledExecutorService scheduler;
 
     private final AtomicBoolean running = new AtomicBoolean(false);
+    private final AtomicReference<BigDecimal> latestPrice = new AtomicReference<>();
     private volatile Long userId;
+    private volatile TradingStrategy strategy;
 
-    public TradingBot(TradingStrategy strategy, TradingService tradingService) {
-        this.strategy = strategy;
+    public TradingBot(TradingService tradingService, StrategyFactory strategyFactory,
+                      @Value("${trading.sample-interval-seconds:3}") long sampleIntervalSeconds) {
         this.tradingService = tradingService;
-        this.tradingThread = Executors.newSingleThreadExecutor(r -> {
+        this.strategyFactory = strategyFactory;
+        this.scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread t = new Thread(r, "trading-engine");
             t.setDaemon(true);
             return t;
         });
-        logger.info("Trading bot initialized (not running until started)");
+        scheduler.scheduleAtFixedRate(this::evaluateLatestPrice, sampleIntervalSeconds, sampleIntervalSeconds, TimeUnit.SECONDS);
+        logger.info("Trading bot initialized (sample interval: {}s)", sampleIntervalSeconds);
     }
 
-    public void start(Long userId) {
+    public void start(Long userId, StrategyType strategyType) {
         if (userId == null) {
             throw new IllegalArgumentException("userId cannot be null");
         }
         this.userId = userId;
+        this.strategy = strategyFactory.createStrategy(strategyType);
         running.set(true);
-        logger.info("Trading bot STARTED for user {}", userId);
+        logger.info("Trading bot STARTED for user {} with strategy {}", userId, strategyType);
     }
 
     public void stop() {
@@ -56,38 +65,52 @@ public class TradingBot {
     }
 
     public void onPriceUpdate(BigDecimal price) {
-        tradingThread.execute(() -> processPriceUpdate(price));
-
+        latestPrice.set(price);
     }
 
-    private void processPriceUpdate(BigDecimal price) {
+    void evaluateLatestPrice() {
         if (!running.get() || userId == null) {
             return;
         }
-        logger.info("Price update: {}", price);
-        TradeSignal signal = strategy.evaluate(
-                price,
-                tradingService.getUsdtBalance(userId),
-                tradingService.getBtcHoldings(userId)
-        );
 
-        switch (signal) {
-            case BUY -> tradingService.executeBuy(userId, SYMBOL, price);
-            case SELL -> tradingService.executeSell(userId, SYMBOL, price);
-            case HOLD -> { }
+        BigDecimal price = latestPrice.get();
+        if (price == null) {
+            return;
+        }
+
+        try {
+            TradeSignal signal = strategy.evaluate(
+                    price,
+                    tradingService.getUsdtBalance(userId),
+                    tradingService.getBtcHoldings(userId)
+            );
+
+            switch (signal) {
+                case BUY -> {
+                    logger.info("BUY at {}", price);
+                    tradingService.executeBuy(userId, SYMBOL, price);
+                }
+                case SELL -> {
+                    logger.info("SELL at {}", price);
+                    tradingService.executeSell(userId, SYMBOL, price);
+                }
+                case HOLD -> { }
+            }
+        } catch (Exception e) {
+            logger.error("Error processing price {}: {}", price, e.getMessage());
         }
     }
 
     @PreDestroy
     public void shutdown() {
         logger.info("Shutting down trading engine");
-        tradingThread.shutdown();
+        scheduler.shutdown();
         try {
-            if (!tradingThread.awaitTermination(5, TimeUnit.SECONDS)) {
-                tradingThread.shutdownNow();
+            if (!scheduler.awaitTermination(5, TimeUnit.SECONDS)) {
+                scheduler.shutdownNow();
             }
         } catch (InterruptedException e) {
-            tradingThread.shutdownNow();
+            scheduler.shutdownNow();
             Thread.currentThread().interrupt();
         }
     }

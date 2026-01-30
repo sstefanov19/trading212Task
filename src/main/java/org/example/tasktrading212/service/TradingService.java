@@ -1,18 +1,22 @@
 package org.example.tasktrading212.service;
 
+import org.example.tasktrading212.dto.TradeResponse;
 import org.example.tasktrading212.exceptions.ZeroBalanceException;
 import org.example.tasktrading212.exceptions.ZeroBitcoinAvailableException;
 import org.example.tasktrading212.model.Trade;
 import org.example.tasktrading212.model.TradeType;
+import org.example.tasktrading212.model.User;
 import org.example.tasktrading212.repository.TradeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TradingService {
@@ -21,10 +25,12 @@ public class TradingService {
 
     private final PortfolioService portfolioService;
     private final TradeRepository tradeRepository;
+    private final UserService userService;
 
-    public TradingService( TradeRepository tradeRepository, PortfolioService portfolioService) {
+    public TradingService(TradeRepository tradeRepository, PortfolioService portfolioService, UserService userService) {
         this.portfolioService = portfolioService;
         this.tradeRepository = tradeRepository;
+        this.userService = userService;
     }
 
     public BigDecimal getUsdtBalance(Long userId) {
@@ -71,5 +77,19 @@ public class TradingService {
 
 
         logger.info("User {} SELL: {} {} @ {} = {} USDT", userId, quantity, symbol, price, total);
+    }
+
+    public List<TradeResponse> getTrades() {
+        User user = userService.getCurrentUser();
+        List<Trade> trades = tradeRepository.findByUserId(user.getId());
+       return trades.stream()
+            .map(t -> new TradeResponse(
+                    t.getType(),
+                    t.getSymbol(),
+                    t.getPrice(),
+                    t.getQuantity(),
+                    t.getTotal(),
+                    t.getTimestamp()))
+            .toList();
     }
 }

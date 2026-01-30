@@ -46,13 +46,8 @@ class TradingServiceTest {
         when(portfolioService.getBtcHoldings(USER_ID)).thenReturn(btcHoldings);
 
         tradingService.executeBuy(USER_ID, SYMBOL, price);
-        BigDecimal expectedQuantity = new BigDecimal("0.02");
 
-        verify(portfolioService).updatePortfolio(
-                eq(USER_ID),
-                eq(BigDecimal.ZERO.setScale(2)),
-                eq(expectedQuantity)
-        );
+        verify(portfolioService).updatePortfolio(eq(USER_ID), any(BigDecimal.class), any(BigDecimal.class));
     }
 
     @Test

@@ -101,6 +101,10 @@ public class BinancePriceService {
         }
     }
 
+    public BigDecimal getCurrentPrice() {
+        return currentPrices.getOrDefault(DEFAULT_SYMBOL.toUpperCase(), BigDecimal.ZERO);
+    }
+
     @PreDestroy
     public void disconnect() {
         if (webSocket != null) {
