@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
-import Dashboard from './components/Dashboard';
-import TradeHistory from './components/TradeHistory';
-import Backtest from './components/Backtest';
-import Login from './components/Login';
+import Sidebar from './components/Sidebar.jsx';
+import Dashboard from './components/Dashboard.jsx';
+import TradeHistory from './components/TradeHistory.jsx';
+import Backtest from './components/Backtest.jsx';
+import Login from './components/Login.jsx';
 import './App.css';
 
 function App() {

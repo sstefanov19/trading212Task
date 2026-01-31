@@ -27,6 +27,12 @@ export const trading = {
     api.post('/trading/start', { strategy }),
   stop: () =>
     api.post('/trading/stop'),
+  pause: () =>
+    api.post('/trading/pause'),
+  resume: () =>
+    api.post('/trading/resume'),
+  reset: () =>
+    api.post('/trading/reset'),
   status: () =>
     api.get('/trading/status'),
   getAll: () =>

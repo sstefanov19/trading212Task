@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1646a4a7-4f7a-43f0-a825-52638042aec6" name="Changes" comment="init commit">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitattributes" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/vite.svg" beforeDir="false" afterPath="$PROJECT_DIR$/backend/public/vite.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Backtest.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Backtest.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Dashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Dashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/components/TradeHistory.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/TradeHistory.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/services/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/services/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mvnw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/backend/mvnw.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/Tasktrading212Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/Tasktrading212Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/config/BinanceConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/config/BinanceConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/config/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/config/JwtAuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/controller/BacktestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/controller/BacktestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/controller/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/controller/GlobalExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/controller/PortfolioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/controller/PortfolioController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/controller/TradingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/controller/TradingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/dto/BacktestResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/dto/BacktestResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/dto/ErrorResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/dto/ErrorResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/dto/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/dto/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/dto/PortfolioResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/dto/PortfolioResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/dto/PricePoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/dto/PricePoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/dto/TradeResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/dto/TradeResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/dto/TradingRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/dto/TradingRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/dto/UserRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/dto/UserRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/exceptions/UserAlreadyExistsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/exceptions/UserAlreadyExistsException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/exceptions/UserNotAuthenticatedException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/exceptions/UserNotAuthenticatedException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/exceptions/ZeroBalanceException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/exceptions/ZeroBalanceException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/exceptions/ZeroBitcoinAvailableException.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/exceptions/ZeroBitcoinAvailableException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/model/BacktestPeriod.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/model/BacktestPeriod.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/model/Portfolio.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/model/Portfolio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/model/Trade.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/model/Trade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/model/TradeSignal.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/model/TradeSignal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/model/TradeType.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/model/TradeType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/model/TrainingTrade.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/model/TrainingTrade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/repository/PortfolioRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/repository/PortfolioRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/repository/TradeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/repository/TradeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/repository/TrainingTradeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/repository/TrainingTradeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/service/BackTestService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/service/BackTestService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/service/BinanceHistoryClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/service/BinanceHistoryClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/service/BinancePriceService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/service/BinancePriceService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/service/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/service/CustomUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/service/PortfolioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/service/PortfolioService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/service/TradingBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/service/TradingBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/service/TradingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/service/TradingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/strategy/MeanReversionStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/strategy/MeanReversionStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/strategy/MovingAverageCrossoverStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/strategy/MovingAverageCrossoverStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/strategy/StrategyFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/strategy/StrategyFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/strategy/StrategyType.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/strategy/StrategyType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/strategy/TradingStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/strategy/TradingStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/tasktrading212/util/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/org/example/tasktrading212/util/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/tasktrading212/Tasktrading212ApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/org/example/tasktrading212/Tasktrading212ApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/tasktrading212/service/TradingBotTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/org/example/tasktrading212/service/TradingBotTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/tasktrading212/service/TradingServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/org/example/tasktrading212/service/TradingServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/tasktrading212/strategy/MeanReversionStrategyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/org/example/tasktrading212/strategy/MeanReversionStrategyTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/tasktrading212/strategy/MovingAverageCrossoverStrategyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/org/example/tasktrading212/strategy/MovingAverageCrossoverStrategyTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Exception" />
+        <option value="Class" />
+        <option value="Record" />
+        <option value="Enum" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;sstefanov19&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/sstefanov19/trading212Task.git&quot;,
+    &quot;accountId&quot;: &quot;770087e1-2470-4c5f-b9a0-b5d5b2adb174&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="38q9lXcX8BHa08opwCfcK469Tuf" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.All in tasktrading212.executor": "Run",
+    "JUnit.ThresholdStrategyTest.executor": "Run",
+    "JUnit.TradingServiceTest.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.Tasktrading212Application.executor": "Run",
+    "git-widget-placeholder": "master",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.37931034",
+    "settings.editor.selected.configurable": "preferences.sourceCode.General",
+    "sql.codeStylePanel.last.previewDialect": "PostgreSQL",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/src" />
+      <recent name="$PROJECT_DIR$/backend" />
+      <recent name="$PROJECT_DIR$/frontend" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.Tasktrading212Application">
+    <configuration name="All in tasktrading212" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tasktrading212" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ThresholdStrategyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tasktrading212" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.tasktrading212.strategy.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.tasktrading212.strategy" />
+      <option name="MAIN_CLASS_NAME" value="org.example.tasktrading212.strategy.ThresholdStrategyTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TradingServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tasktrading212" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.tasktrading212.service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.tasktrading212.service" />
+      <option name="MAIN_CLASS_NAME" value="org.example.tasktrading212.service.TradingServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Tasktrading212Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="tasktrading212" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.tasktrading212.Tasktrading212Application" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.All in tasktrading212" />
+        <item itemvalue="JUnit.TradingServiceTest" />
+        <item itemvalue="JUnit.ThresholdStrategyTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.26927.53" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.26927.53" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1646a4a7-4f7a-43f0-a825-52638042aec6" name="Changes" comment="" />
+      <created>1769516389380</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1769516389380</updated>
+      <workItem from="1769516390548" duration="3543000" />
+      <workItem from="1769520091891" duration="14237000" />
+      <workItem from="1769589324568" duration="74411000" />
+    </task>
+    <task id="LOCAL-00001" summary="init commit">
+      <option name="closed" value="true" />
+      <created>1769516619870</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1769516619870</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="init commit" />
+  </component>
+</project>

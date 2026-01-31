@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { trading } from '../services/api';
+import { trading } from '../services/api.js';
 import './TradeHistory.css';
 
 function TradeHistory() {

@@ -73,6 +73,11 @@ button.success {
   color: white;
 }
 
+button.warning {
+  background-color: var(--accent-yellow);
+  color: #1a1a2e;
+}
+
 input, select {
   background-color: var(--bg-tertiary);
   border: 1px solid var(--border-color);

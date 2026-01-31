@@ -1,12 +1,49 @@
 .dashboard {
-  padding: 24px;
+  padding: 32px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-.dashboard h1 {
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 24px;
+}
+
+.dashboard h1 {
   font-size: 28px;
+  margin: 0;
+}
+
+.mode-toggle {
+  display: flex;
+  background-color: var(--bg-tertiary);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.mode-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-btn:hover {
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+.mode-btn.active {
+  background-color: var(--accent-yellow);
+  color: #0b0e11;
 }
 
 .dashboard-grid {
@@ -38,6 +75,10 @@
 
 .status-indicator.stopped {
   color: var(--text-secondary);
+}
+
+.status-indicator.paused {
+  color: var(--accent-yellow);
 }
 
 .controls {
@@ -95,4 +136,16 @@
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.trades-card {
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.trades-card h3 {
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
 }

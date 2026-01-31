@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import { trading, portfolio } from '../services/api';
-import ProfitLossChart from './ProfitLossChart';
+import { trading, portfolio } from '../services/api.js';
+import ProfitLossChart from './ProfitLossChart.jsx';
+import TradeHistory from './TradeHistory.jsx';
+import Backtest from './Backtest.jsx';
 import './Dashboard.css';
 
 function Dashboard() {
+  const [mode, setMode] = useState('live');
   const [botStatus, setBotStatus] = useState({ running: false });
   const [selectedStrategy, setSelectedStrategy] = useState('MEAN_REVERSION');
   const [loading, setLoading] = useState(false);
@@ -48,6 +51,41 @@ function Dashboard() {
       await fetchPortfolio();
     } catch (error) {
       console.error('Failed to stop bot:', error);
+    }
+    setLoading(false);
+  };
+
+  const handlePause = async () => {
+    setLoading(true);
+    try {
+      await trading.pause();
+      await fetchStatus();
+    } catch (error) {
+      console.error('Failed to pause bot:', error);
+    }
+    setLoading(false);
+  };
+
+  const handleResume = async () => {
+    setLoading(true);
+    try {
+      await trading.resume();
+      await fetchStatus();
+    } catch (error) {
+      console.error('Failed to resume bot:', error);
+    }
+    setLoading(false);
+  };
+
+  const handleReset = async () => {
+    setLoading(true);
+    try {
+      await trading.reset();
+      await fetchStatus();
+      await fetchPortfolio();
+      await fetchChartData();
+    } catch (error) {
+      console.error('Failed to reset account:', error);
     }
     setLoading(false);
   };
@@ -125,13 +163,33 @@ function Dashboard() {
 
   return (
     <div className="dashboard">
-      <h1>Trading Dashboard</h1>
+      <div className="dashboard-header">
+        <h1>Trading Dashboard</h1>
+        <div className="mode-toggle">
+          <button
+            className={mode === 'live' ? 'mode-btn active' : 'mode-btn'}
+            onClick={() => setMode('live')}
+          >
+            Live Sim
+          </button>
+          <button
+            className={mode === 'backtest' ? 'mode-btn active' : 'mode-btn'}
+            onClick={() => setMode('backtest')}
+          >
+            Backtest
+          </button>
+        </div>
+      </div>
 
+      {mode === 'backtest' ? (
+        <Backtest />
+      ) : (
+      <>
       <div className="dashboard-grid">
         <div className="card status-card">
           <h3>Bot Status</h3>
-          <div className={`status-indicator ${botStatus.running ? 'running' : 'stopped'}`}>
-            {botStatus.running ? 'RUNNING' : 'STOPPED'}
+          <div className={`status-indicator ${botStatus.running ? (botStatus.paused ? 'paused' : 'running') : 'stopped'}`}>
+            {botStatus.running ? (botStatus.paused ? 'PAUSED' : 'RUNNING') : 'STOPPED'}
           </div>
 
           <div className="controls">
@@ -146,13 +204,29 @@ function Dashboard() {
             </select>
 
             {botStatus.running ? (
-              <button className="danger" onClick={handleStop} disabled={loading}>
-                Stop Bot
-              </button>
+              <>
+                {botStatus.paused ? (
+                  <button className="success" onClick={handleResume} disabled={loading}>
+                    Resume
+                  </button>
+                ) : (
+                  <button className="warning" onClick={handlePause} disabled={loading}>
+                    Pause
+                  </button>
+                )}
+                <button className="danger" onClick={handleStop} disabled={loading}>
+                  Stop Bot
+                </button>
+              </>
             ) : (
-              <button className="success" onClick={handleStart} disabled={loading}>
-                Start Bot
-              </button>
+              <>
+                <button className="success" onClick={handleStart} disabled={loading}>
+                  Start Bot
+                </button>
+                <button className="danger" onClick={handleReset} disabled={loading}>
+                  Reset
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -188,6 +262,13 @@ function Dashboard() {
         <h3>Performance Chart</h3>
         <ProfitLossChart data={chartData} />
       </div>
+
+      <div className="card trades-card">
+        <h3>Trade History</h3>
+        <TradeHistory />
+      </div>
+      </>
+      )}
     </div>
   );
 }

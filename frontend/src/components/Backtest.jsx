@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { backtest } from '../services/api';
-import ProfitLossChart from './ProfitLossChart';
+import { backtest } from '../services/api.js';
+import ProfitLossChart from './ProfitLossChart.jsx';
 import './Backtest.css';
 
 function Backtest() {

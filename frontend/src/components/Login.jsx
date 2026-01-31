@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { auth } from '../services/api';
+import { auth } from '../services/api.js';
 import './Login.css';
 
 function Login({ onLogin }) {
