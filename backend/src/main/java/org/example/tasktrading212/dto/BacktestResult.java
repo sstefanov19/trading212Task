@@ -2,6 +2,7 @@ package org.example.tasktrading212.dto;
 
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record BacktestResult(
         String backtestId,
@@ -10,5 +11,6 @@ public record BacktestResult(
         int sellCount,
         BigDecimal initialBalance,
         BigDecimal finalValue,
-        BigDecimal profitLoss
+        BigDecimal profitLoss,
+        List<PricePoint> portfolioOverTime
 ) {}

@@ -61,15 +61,22 @@ public class TradingBot {
         }
     }
 
-    public void stop() {
+    public void stop(Long userId) {
+        BotState current = state.get();
+        if (current == null) {
+            return;
+        }
+        if (!current.userId().equals(userId)) {
+            throw new IllegalStateException("Cannot stop another user's bot");
+        }
         state.set(null);
         paused.set(false);
-        logger.info("Trading bot STOPPED");
+        logger.info("Trading bot STOPPED for user {}", userId);
     }
 
     public void pause() {
-        paused.set(true);
-        logger.info("Trading bot PAUSED");
+            paused.set(true);
+            logger.info("Trading bot PAUSED");
     }
 
     public void resume() {

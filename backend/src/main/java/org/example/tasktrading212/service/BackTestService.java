@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,14 +31,16 @@ public class BackTestService {
     private final StrategyFactory strategyFactory;
     private final TrainingTradeRepository trainingTradeRepository;
 
-    public BackTestService(BinanceHistoryClient historyClient, StrategyFactory strategyFactory, TrainingTradeRepository trainingTradeRepository) {
+    public BackTestService(BinanceHistoryClient historyClient, StrategyFactory strategyFactory,
+            TrainingTradeRepository trainingTradeRepository) {
         this.historyClient = historyClient;
         this.strategyFactory = strategyFactory;
         this.trainingTradeRepository = trainingTradeRepository;
     }
 
     @Transactional
-    public synchronized BacktestResult runBacktest(Long userId, BigDecimal initialBalance, StrategyType strategyType, BacktestPeriod period) {
+    public BacktestResult runBacktest(Long userId, BigDecimal initialBalance, StrategyType strategyType,
+            BacktestPeriod period) {
         TradingStrategy strategy = strategyFactory.createStrategy(strategyType);
         CandleConfig config = getCandleConfig(period);
 
@@ -48,60 +51,78 @@ public class BackTestService {
             prices = historyClient.getHistoricalPrices(SYMBOL, config.interval(), config.limit());
         } catch (Exception e) {
             logger.error("Failed to fetch historical prices for backtest {}: {}", backtestId, e.getMessage());
-            return new BacktestResult(backtestId, 0, 0, 0, initialBalance, initialBalance, BigDecimal.ZERO);
+            return new BacktestResult(backtestId, 0, 0, 0, initialBalance, initialBalance, BigDecimal.ZERO, List.of());
         }
 
         if (prices.isEmpty()) {
             logger.warn("No price data found for the given period");
-            return new BacktestResult(backtestId, 0, 0, 0, initialBalance, initialBalance, BigDecimal.ZERO);
+            return new BacktestResult(backtestId, 0, 0, 0, initialBalance, initialBalance, BigDecimal.ZERO, List.of());
         }
 
-        BigDecimal usdtBalance = initialBalance;
-        BigDecimal btcHoldings = BigDecimal.ZERO;
+        PortfolioState state = new PortfolioState(initialBalance, BigDecimal.ZERO);
         int buyCount = 0;
         int sellCount = 0;
+        List<PricePoint> portfolioOverTime = new ArrayList<>();
+        portfolioOverTime.add(new PricePoint(prices.get(0).timestamp(), initialBalance));
 
         for (PricePoint pricePoint : prices) {
-            TradeSignal signal = strategy.evaluate(pricePoint.price(), usdtBalance, btcHoldings);
+            TradeSignal signal = strategy.evaluate(pricePoint.price(), state.usdt(), state.btc());
 
             switch (signal) {
                 case BUY -> {
-                    if (usdtBalance.compareTo(BigDecimal.ZERO) > 0) {
-                        BigDecimal quantity = usdtBalance.divide(pricePoint.price(), 8, RoundingMode.DOWN);
-                        BigDecimal total = quantity.multiply(pricePoint.price()).setScale(2, RoundingMode.HALF_UP);
-
-                        btcHoldings = btcHoldings.add(quantity);
-                        usdtBalance = usdtBalance.subtract(total);
-
-                        saveTrade(userId, backtestId, TradeType.BUY, pricePoint, quantity, total);
+                    if (state.usdt().compareTo(BigDecimal.ZERO) > 0) {
+                        state = executeBuy(state, pricePoint, userId, backtestId);
                         buyCount++;
+                        BigDecimal value = state.usdt().add(state.btc().multiply(pricePoint.price())).setScale(2, RoundingMode.HALF_UP);
+                        portfolioOverTime.add(new PricePoint(pricePoint.timestamp(), value));
                     }
                 }
                 case SELL -> {
-                    if (btcHoldings.compareTo(BigDecimal.ZERO) > 0) {
-                        BigDecimal total = btcHoldings.multiply(pricePoint.price()).setScale(2, RoundingMode.HALF_UP);
-
-                        usdtBalance = usdtBalance.add(total);
-                        BigDecimal soldQuantity = btcHoldings;
-                        btcHoldings = BigDecimal.ZERO;
-
-                        saveTrade(userId, backtestId, TradeType.SELL, pricePoint, soldQuantity, total);
+                    if (state.btc().compareTo(BigDecimal.ZERO) > 0) {
+                        state = executeSell(state, pricePoint, userId, backtestId);
                         sellCount++;
+                        BigDecimal value = state.usdt().add(state.btc().multiply(pricePoint.price())).setScale(2, RoundingMode.HALF_UP);
+                        portfolioOverTime.add(new PricePoint(pricePoint.timestamp(), value));
                     }
                 }
-                case HOLD -> {}
+                case HOLD -> {
+                }
             }
         }
 
-        BigDecimal finalValue = usdtBalance.add(btcHoldings.multiply(prices.get(prices.size() - 1).price()));
+        BigDecimal lastPrice = prices.get(prices.size() - 1).price();
+        BigDecimal finalValue = state.usdt().add(state.btc().multiply(lastPrice));
         BigDecimal profitLoss = finalValue.subtract(initialBalance).setScale(2, RoundingMode.HALF_UP);
+        portfolioOverTime.add(new PricePoint(prices.get(prices.size() - 1).timestamp(), finalValue.setScale(2, RoundingMode.HALF_UP)));
 
         logger.info("Backtest {} complete: {} buys, {} sells, P/L: {}", backtestId, buyCount, sellCount, profitLoss);
 
-        return new BacktestResult(backtestId, prices.size(), buyCount, sellCount, initialBalance, finalValue, profitLoss);
+        return new BacktestResult(backtestId, prices.size(), buyCount, sellCount, initialBalance, finalValue,
+                profitLoss, portfolioOverTime);
     }
 
-    private void saveTrade(Long userId, String backtestId, TradeType type, PricePoint pricePoint, BigDecimal quantity, BigDecimal total) {
+    private record PortfolioState(BigDecimal usdt, BigDecimal btc) {
+    }
+
+    private PortfolioState executeBuy(PortfolioState state, PricePoint pricePoint, Long userId, String backtestId) {
+        BigDecimal quantity = state.usdt().divide(pricePoint.price(), 8, RoundingMode.DOWN);
+        BigDecimal total = quantity.multiply(pricePoint.price()).setScale(2, RoundingMode.HALF_UP);
+
+        saveTrade(userId, backtestId, TradeType.BUY, pricePoint, quantity, total);
+
+        return new PortfolioState(state.usdt().subtract(total), state.btc().add(quantity));
+    }
+
+    private PortfolioState executeSell(PortfolioState state, PricePoint pricePoint, Long userId, String backtestId) {
+        BigDecimal total = state.btc().multiply(pricePoint.price()).setScale(2, RoundingMode.HALF_UP);
+
+        saveTrade(userId, backtestId, TradeType.SELL, pricePoint, state.btc(), total);
+
+        return new PortfolioState(state.usdt().add(total), BigDecimal.ZERO);
+    }
+
+    private void saveTrade(Long userId, String backtestId, TradeType type, PricePoint pricePoint, BigDecimal quantity,
+            BigDecimal total) {
         TrainingTrade trade = new TrainingTrade();
         trade.setUserId(userId);
         trade.setType(type);
@@ -115,7 +136,8 @@ public class BackTestService {
         trainingTradeRepository.save(trade);
     }
 
-    private record CandleConfig(String interval, int limit) {}
+    private record CandleConfig(String interval, int limit) {
+    }
 
     private CandleConfig getCandleConfig(BacktestPeriod period) {
         return switch (period) {

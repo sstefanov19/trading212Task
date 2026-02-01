@@ -29,23 +29,22 @@ public class TradingController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<Map<String, Object>> startTrading(@Valid  @RequestBody TradingRequest request) {
+    public ResponseEntity<Map<String, Object>> startTrading(@Valid @RequestBody TradingRequest request) {
         User user = userService.getCurrentUser();
         tradingBot.start(user.getId(), request.strategy());
         return ResponseEntity.status(HttpStatus.OK).body(Map.of(
                 "status", "running",
                 "strategy", request.strategy(),
-                "message", "Trading bot started"
-        ));
+                "message", "Trading bot started"));
     }
 
     @PostMapping("/stop")
     public ResponseEntity<Map<String, Object>> stopTrading() {
-        tradingBot.stop();
+        User user = userService.getCurrentUser();
+        tradingBot.stop(user.getId());
         return ResponseEntity.status(HttpStatus.OK).body(Map.of(
                 "status", "stopped",
-                "message", "Trading bot stopped"
-        ));
+                "message", "Trading bot stopped"));
     }
 
     @PostMapping("/pause")
@@ -53,8 +52,7 @@ public class TradingController {
         tradingBot.pause();
         return ResponseEntity.status(HttpStatus.OK).body(Map.of(
                 "status", "paused",
-                "message", "Trading bot paused"
-        ));
+                "message", "Trading bot paused"));
     }
 
     @PostMapping("/resume")
@@ -62,29 +60,26 @@ public class TradingController {
         tradingBot.resume();
         return ResponseEntity.status(HttpStatus.OK).body(Map.of(
                 "status", "running",
-                "message", "Trading bot resumed"
-        ));
+                "message", "Trading bot resumed"));
     }
 
     @PostMapping("/reset")
     public ResponseEntity<Map<String, Object>> resetAccount() {
         User user = userService.getCurrentUser();
         if (tradingBot.isRunning()) {
-            tradingBot.stop();
+            tradingBot.stop(user.getId());
         }
         tradingService.resetAccount(user.getId());
         return ResponseEntity.ok(Map.of(
                 "status", "reset",
-                "message", "Account reset successfully"
-        ));
+                "message", "Account reset successfully"));
     }
 
     @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> getStatus() {
         return ResponseEntity.ok(Map.of(
                 "running", tradingBot.isRunning(),
-                "paused", tradingBot.isPaused()
-        ));
+                "paused", tradingBot.isPaused()));
     }
 
     @GetMapping

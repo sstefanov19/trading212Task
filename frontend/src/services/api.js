@@ -41,7 +41,7 @@ export const trading = {
 
 export const backtest = {
   run: (initialBalance, strategy, period) =>
-    api.post(`/backtest/run?initialBalance=${initialBalance}&strategy=${strategy}&period=${period}`),
+    api.post('/backtest/run', { initialBalance, strategy, period }),
 };
 
 export const portfolio = {

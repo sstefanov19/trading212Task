@@ -3,6 +3,13 @@ DROP TABLE IF EXISTS trades;
 DROP TABLE IF EXISTS training_trade;
 DROP TABLE IF EXISTS users;
 
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(20) NOT NULL,
+    username VARCHAR(20) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE portfolios (
     id SERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id),
@@ -36,11 +43,4 @@ CREATE TABLE training_trade(
     timestamp TIMESTAMP NOT NULL,
     backtest_id VARCHAR(36),
     FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(20) NOT NULL,
-    username VARCHAR(20) NOT NULL,
-    password VARCHAR(255) NOT NULL
 );

@@ -1,32 +1,24 @@
 import { useState } from 'react';
-import { backtest } from '../services/api.js';
+import { useBacktest } from '../hooks/useTrading.js';
 import ProfitLossChart from './ProfitLossChart.jsx';
 import './Backtest.css';
+
+const STRATEGIES = ['MEAN_REVERSION', 'MOVING_AVERAGE'];
+const PERIODS = [
+  { value: 'LAST_10_MINUTES', label: 'Last 10 Minutes' },
+  { value: 'LAST_10_HOURS', label: 'Last 10 Hours' },
+  { value: 'LAST_1_DAY', label: 'Last 1 Day' },
+];
 
 function Backtest() {
   const [period, setPeriod] = useState('LAST_1_DAY');
   const [initialBalance, setInitialBalance] = useState(1000);
   const [strategy, setStrategy] = useState('MEAN_REVERSION');
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
 
-  const strategies = ['MEAN_REVERSION', 'MOVING_AVERAGE'];
-  const periods = [
-    { value: 'LAST_10_MINUTES', label: 'Last 10 Minutes' },
-    { value: 'LAST_10_HOURS', label: 'Last 10 Hours' },
-    { value: 'LAST_1_DAY', label: 'Last 1 Day' },
-  ];
+  const { result, loading, error, run } = useBacktest();
 
-  const handleRunBacktest = async () => {
-    setLoading(true);
-    try {
-      const response = await backtest.run(initialBalance, strategy, period);
-      setResult(response.data);
-    } catch (error) {
-      console.error('Backtest failed:', error);
-      alert('Backtest failed. Check console for details.');
-    }
-    setLoading(false);
+  const handleRunBacktest = () => {
+    run(initialBalance, strategy, period);
   };
 
   return (
@@ -40,7 +32,7 @@ function Backtest() {
           <div className="form-group">
             <label>Strategy</label>
             <select value={strategy} onChange={(e) => setStrategy(e.target.value)}>
-              {strategies.map((s) => (
+              {STRATEGIES.map((s) => (
                 <option key={s} value={s}>{s.replace('_', ' ')}</option>
               ))}
             </select>
@@ -49,7 +41,7 @@ function Backtest() {
           <div className="form-group">
             <label>Period</label>
             <select value={period} onChange={(e) => setPeriod(e.target.value)}>
-              {periods.map((p) => (
+              {PERIODS.map((p) => (
                 <option key={p.value} value={p.value}>{p.label}</option>
               ))}
             </select>
@@ -61,12 +53,15 @@ function Backtest() {
               type="number"
               value={initialBalance}
               onChange={(e) => setInitialBalance(Number(e.target.value))}
+              min="1"
             />
           </div>
 
           <button onClick={handleRunBacktest} disabled={loading}>
             {loading ? 'Running...' : 'Run Backtest'}
           </button>
+
+          {error && <div className="error-message">{error}</div>}
         </div>
 
         {result && (
@@ -116,10 +111,19 @@ function Backtest() {
       {result && (
         <div className="card chart-card">
           <h3>Performance</h3>
-          <ProfitLossChart data={[
-            { time: 'Start', value: result.initialBalance },
-            { time: 'End', value: result.finalValue }
-          ]} />
+          <ProfitLossChart data={
+            (result.portfolioOverTime && result.portfolioOverTime.length > 0)
+              ? result.portfolioOverTime.map((point) => {
+                  const date = new Date(point.timestamp);
+                  const time = date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' +
+                               date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                  return { time, value: Number(point.price) };
+                })
+              : [
+                  { time: 'Start', value: result.initialBalance },
+                  { time: 'End', value: result.finalValue }
+                ]
+          } />
         </div>
       )}
     </div>
