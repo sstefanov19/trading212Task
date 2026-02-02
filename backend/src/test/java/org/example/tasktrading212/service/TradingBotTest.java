@@ -75,7 +75,7 @@ class TradingBotTest {
         when(strategyFactory.createStrategy(STRATEGY_TYPE)).thenReturn(strategy);
 
         tradingBot.start(USER_ID, STRATEGY_TYPE);
-        tradingBot.stop();
+        tradingBot.stop(USER_ID);
 
         assertFalse(tradingBot.isRunning());
     }
@@ -142,7 +142,7 @@ class TradingBotTest {
 
         tradingBot.start(USER_ID, STRATEGY_TYPE);
         tradingBot.onPriceUpdate(PRICE);
-        tradingBot.stop();
+        tradingBot.stop(USER_ID);
         tradingBot.evaluateLatestPrice();
 
         verify(strategy, never()).evaluate(any(), any(), any());
@@ -199,7 +199,7 @@ class TradingBotTest {
 
         tradingBot.start(USER_ID, STRATEGY_TYPE);
         tradingBot.pause();
-        tradingBot.stop();
+        tradingBot.stop(USER_ID);
 
         assertFalse(tradingBot.isPaused());
         assertFalse(tradingBot.isRunning());
