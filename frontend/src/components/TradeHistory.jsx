@@ -2,7 +2,7 @@ import { useTrades } from '../hooks/useTrading.js';
 import './TradeHistory.css';
 
 function TradeHistory() {
-  const { trades, loading } = useTrades();
+  const { trades, loading } = useTrades(true);
 
   if (loading) {
     return (

@@ -224,7 +224,7 @@ export function useBacktest() {
 /**
  * Custom hook for trade history
  */
-export function useTrades() {
+export function useTrades(isPolling = false) {
   const [trades, setTrades] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -245,6 +245,12 @@ export function useTrades() {
   useEffect(() => {
     fetchTrades();
   }, [fetchTrades]);
+
+  useEffect(() => {
+    if (!isPolling) return;
+    const interval = setInterval(fetchTrades, 5000);
+    return () => clearInterval(interval);
+  }, [isPolling, fetchTrades]);
 
   return {
     trades,
